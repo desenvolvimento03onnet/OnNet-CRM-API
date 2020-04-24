@@ -17,7 +17,6 @@ class AuthController {
 
         return token;
     }
-
 }
 
 module.exports = AuthController

@@ -4,10 +4,17 @@ const Quest = use('App/Models/Quest');
 
 class QuestController {
 
-  async index() {
-    const quest = await Quest.all();
+  async index({ request }) {
+    const { active, user } = request.get();
+    const quests = Quest.query().with('searches').with('user');
 
-    return quest;
+    if (active)
+      quests.where('active', active);
+
+    if (user)
+      quests.where('user_id', user);
+
+    return await quests.fetch();
   }
 
   async store({ request, auth }) {

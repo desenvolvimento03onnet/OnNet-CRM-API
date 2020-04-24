@@ -1,33 +1,38 @@
 'use strict'
 
 const Answer = use('App/Models/Answer');
+const Quest = use('App/Models/Quest');
 
 class FilterAnswerController {
 
-    async findByCity({ params }) {
+    async countAnswersByQuest({ params }) {
+        let answerByQuest = [];
 
-        // const answer = await Answer.query().with('interview.city').where('interveiw')
+        const quest = await Quest.query()
+            .innerJoin('search_quests', 'quests.id', 'search_quests.quest_id')
+            .where('search_quests.search_id', params.id).orderBy('quests.id').fetch();
 
-        const answer = await Answer.query()
-            .leftJoin('interviews', 'answers.interview_id', 'interviews.id')
-            .where('city_id', params.id).with('interview.city').fetch();
+        for (var i = 0; i < quest.rows.length; i++) {
 
-        return answer
-    }
+            const answer = await Answer.query()
+                .select('answers.rate')
+                .innerJoin('interviews', 'answers.interview_id', 'interviews.id')
+                .innerJoin('quests', 'answers.quest_id', 'quests.id')
+                .where('quests.id', quest.rows[i].quest_id)
+                .where('interviews.finished', true)
+                .where('interviews.search_id', params.id)
+                .count('answers.id')
+                .groupBy('quests.id', 'answers.rate')
+                .orderBy('answers.rate', 'desc')
 
-    async findByInterview({ params }) {
-        const answer = await Answer.query().where('interview_id', params.id).with('interview').fetch();
+            answerByQuest.push({
+                quest_id: quest.rows[i].quest_id,
+                question: quest.rows[i].question,
+                rates: answer
+            })
+        }
 
-        return answer;
-    }
-
-    async findByQuest({ params, request }) {
-        const answer = await Answer.query().where('quest_id', params.id).with('quest').fetch();
-        const rate = request.get('rate');
-
-        console.log(rate);
-
-        return answer;
+        return answerByQuest;
     }
 
 }

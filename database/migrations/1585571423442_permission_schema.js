@@ -7,6 +7,7 @@ class PermissionSchema extends Schema {
     this.create('permissions', (table) => {
       table.increments()
       table.string('type', 32).notNullable()
+      table.integer('level').notNullable().unique()
       table.boolean('active').defaultTo(true)
       table.timestamps()
     })

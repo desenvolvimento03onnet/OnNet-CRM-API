@@ -4,19 +4,23 @@ const User = use('App/Models/User');
 
 class UserController {
 
-    async index() {
-        const users = await User.all();
+    async index({ request }) {
+        const { active } = request.get()
+        const users = User.query();
 
-        return users;
+        if (active)
+            users.where('active', active);
+
+        return await users.fetch();
     }
 
     async store({ request }) {
-        const { permissions, ...data } = request.only(['name', 'username', 'password', 'active']);
+        const { permissions, ...data } = request.only(['name', 'username', 'password', 'active', 'permissions']);
         const user = await User.create(data);
 
         if (permissions && permissions.length > 0) {
             await user.permissions().attach(permissions);
-            search.permissions = await user.permissions().fetch();
+            user.permissions = await user.permissions().fetch();
         }
 
         return user;

@@ -4,10 +4,17 @@ const Search = use('App/Models/Search');
 
 class SearchController {
 
-  async index() {
-    const search = await Search.all();
+  async index({ request }) {
+    const { active, user } = request.get();
+    const searches = Search.query().with('quests').with('user');
 
-    return search;
+    if (active)
+      searches.where('active', active)
+
+    if (user)
+      searches.where('user_id', user);
+
+    return await searches.fetch();
   }
 
   async store({ request, auth }) {

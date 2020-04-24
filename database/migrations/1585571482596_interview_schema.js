@@ -8,7 +8,7 @@ class InterviewSchema extends Schema {
       table.increments()
       table.string('client_name').notNullable()
       table.date('interview_date').notNullable()
-      table.boolean('finished').notNullable().defautTo(false)
+      table.boolean('finished').notNullable().defaultTo(false)
       table.integer('search_id')
         .unsigned()
         .notNullable()

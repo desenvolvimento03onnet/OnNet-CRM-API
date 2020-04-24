@@ -8,6 +8,10 @@ class Search extends Model {
         return this.belongsToMany('App/Models/Quest').pivotModel('App/Models/SearchQuest');
     }
 
+    user() {
+        return this.belongsTo('App/Models/User');
+    }
+
 }
 
 module.exports = Search

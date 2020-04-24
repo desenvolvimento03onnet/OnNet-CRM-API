@@ -5,10 +5,29 @@ const SearchQuest = use('App/Models/SearchQuest');
 
 class InterviewController {
 
-  async index() {
-    const interview = await Interview.all();
+  async index({ request }) {
+    const { beginDate, city, endDate, finished, search, user } = request.get();
+    const interviews = Interview.query();
 
-    return interview;
+    if (beginDate)
+      interviews.where('interview_date', '>=', beginDate);
+
+    if (city)
+      interviews.where('city_id', city).with('city');
+
+    if (endDate)
+      interviews.where('interview_date', '<=', endDate);
+
+    if (finished)
+      interviews.where('finished', finished);
+
+    if (search)
+      interviews.where('search_id', search).with('search');
+
+    if (user)
+      interviews.where('user_id', user).with('user');
+
+    return await interviews.fetch();
   }
 
   async store({ request, response, auth }) {

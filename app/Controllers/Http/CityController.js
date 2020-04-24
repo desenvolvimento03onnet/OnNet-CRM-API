@@ -4,10 +4,17 @@ const City = use('App/Models/City');
 
 class CityController {
 
-  async index() {
-    const cities = await City.all();
+  async index({ request }) {
+    const { active, user } = request.get();
+    const cities = City.query().with('user');
 
-    return cities;
+    if (active)
+      cities.where('active', active);
+
+    if (user)
+      cities.where('user_id', user);
+
+    return await cities.fetch();
   }
 
   async store({ request, auth }) {
@@ -28,7 +35,6 @@ class CityController {
     const city = await City.findOrFail(params.id);
 
     city.merge(data);
-
     await city.save();
 
     return city;
