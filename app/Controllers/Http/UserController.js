@@ -15,13 +15,8 @@ class UserController {
     }
 
     async store({ request }) {
-        const { permissions, ...data } = request.only(['name', 'username', 'password', 'active', 'permissions']);
+        const data = request.only(['name', 'username', 'password', 'active', 'permission_id']);
         const user = await User.create(data);
-
-        if (permissions && permissions.length > 0) {
-            await user.permissions().attach(permissions);
-            user.permissions = await user.permissions().fetch();
-        }
 
         return user;
     }
@@ -33,16 +28,11 @@ class UserController {
     }
 
     async update({ params, request }) {
-        const { permissions, ...data } = request.only(['name', 'username', 'password', 'active']);
+        const data = request.only(['name', 'username', 'password', 'active', 'permission_id']);
         const user = await User.findOrFail(params.id);
 
         user.merge(data);
         await user.save();
-
-        if (permissions && permissions.length > 0) {
-            await user.permissions().sync(permissions);
-            user.permissions = await user.permissions().fetch();
-        }
 
         return user;
     }

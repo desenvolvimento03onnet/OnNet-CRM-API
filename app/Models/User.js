@@ -15,8 +15,8 @@ class User extends Model {
     })
   }
 
-  permissions() {
-    return this.belongsToMany('App/Models/Permission').pivotModel('App/Models/UserPermission')
+  permission() {
+    return this.belongsTo('App/Models/Permission')
   }
 
   tokens() {

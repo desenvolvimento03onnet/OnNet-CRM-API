@@ -11,7 +11,7 @@ class PermissionController {
   }
 
   async store({ request }) {
-    const data = request.only(['type', 'level']);
+    const data = request.only(['type']);
     const permission = await Permission.create(data);
 
     return permission;
@@ -24,7 +24,7 @@ class PermissionController {
   }
 
   async update({ params, request }) {
-    const data = request.only(['type', 'level', 'active']);
+    const data = request.only(['type', 'active']);
     const permission = await permission.findOrFail(params.id);
 
     permission.merge(data);

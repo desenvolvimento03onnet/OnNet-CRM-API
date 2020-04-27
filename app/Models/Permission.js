@@ -5,7 +5,7 @@ const Model = use('Model')
 class Permission extends Model {
 
     users() {
-        return this.belongsToMany('App/Models/User').pivotModel('App/Models/UserPermission');
+        return this.belongsToMany('App/Models/User')
     }
 }
 
