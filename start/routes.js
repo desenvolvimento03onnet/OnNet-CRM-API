@@ -9,12 +9,12 @@ Route.get('/', () => {
 //register new User
 Route.post('/register', 'AuthController.register');
 Route.post('/authenticate', 'AuthController.authenticate');
+Route.resource('permission', 'PermissionController').apiOnly();
 
 Route.group(() => {
   Route.resource('answer', 'AnswerController').apiOnly().except(['store']);
   Route.resource('city', 'CityController').apiOnly();
   Route.resource('interview', 'InterviewController').apiOnly();
-  Route.resource('permission', 'PermissionController').apiOnly();
   Route.resource('quest', 'QuestController').apiOnly();
   Route.resource('search', 'SearchController').apiOnly();
   Route.resource('searchQuest', 'SearchQuestController').apiOnly().except(['store', 'update']);
