@@ -9,7 +9,7 @@ Route.get('/', () => {
 //register new User
 Route.post('/register', 'AuthController.register');
 Route.post('/authenticate', 'AuthController.authenticate');
-Route.resource('permission', 'PermissionController').apiOnly();
+Route.resource('/permission', 'PermissionController').apiOnly();
 
 Route.group(() => {
   Route.resource('answer', 'AnswerController').apiOnly().except(['store']);
@@ -31,4 +31,7 @@ Route.group(() => {
   //searchQuest filter routes
   Route.get('searchQuest/search/:id', 'FilterSearchQuestController.findBySearch');
   Route.get('searchQuest/quest/:id', 'FilterSearchQuestController.findByQuest');
+  Route.get('searchQuest/exceptSearch/:id', 'FilterSearchQuestController.findExceptSearch');
+  Route.get('searchQuest/exceptQuest/:id', 'FilterSearchQuestController.findExceptQuest');
+
 }).middleware(['auth']);
