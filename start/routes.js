@@ -28,10 +28,11 @@ Route.group(() => {
   Route.get('interview/groupBy/user', 'FilterInterviewController.interviewsByUser');
   Route.get('interview/groupBy/city', 'FilterInterviewController.interviewsByCity');
 
+  //search filter routes
+  Route.get('search/except/:id', 'FilterSearchController.findExceptSearch');
+
   //searchQuest filter routes
   Route.get('searchQuest/search/:id', 'FilterSearchQuestController.findBySearch');
   Route.get('searchQuest/quest/:id', 'FilterSearchQuestController.findByQuest');
-  Route.get('searchQuest/exceptSearch/:id', 'FilterSearchQuestController.findExceptSearch');
-  Route.get('searchQuest/exceptQuest/:id', 'FilterSearchQuestController.findExceptQuest');
 
 }).middleware(['auth']);
