@@ -31,6 +31,9 @@ Route.group(() => {
   //quest filter routes
   Route.get('quest/exceptSearch/:id', 'FilterQuestController.findExceptSearch');
 
+  //search filter routes
+  Route.get('search/exceptQuest/:id', 'FilterSearchController.findExceptQuest');
+
   //searchQuest filter routes
   Route.get('searchQuest/search/:id', 'FilterSearchQuestController.findBySearch');
   Route.get('searchQuest/quest/:id', 'FilterSearchQuestController.findByQuest');

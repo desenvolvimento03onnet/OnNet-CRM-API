@@ -21,7 +21,7 @@ class SearchController {
     const { quests, ...data } = request.only(['type', 'quests']);
     const search = await Search.create({ 'user_id': auth.user.id, ...data });
 
-    if (quests && quests.length > 0) {
+    if (quests && quests.length >= 0) {
       await search.quests().attach(quests);
       search.quests = await search.quests().fetch();
     }
@@ -42,7 +42,7 @@ class SearchController {
     search.merge(data);
     await search.save();
 
-    if (quests && quests.length > 0) {
+    if (quests && quests.length >= 0) {
       await search.quests().sync(quests);
       search.quests = await search.quests().fetch();
     }

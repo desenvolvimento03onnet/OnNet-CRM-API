@@ -21,7 +21,7 @@ class QuestController {
     const { searches, ...data } = request.only(['question', 'searches']);
     const quest = await Quest.create({ 'user_id': auth.user.id, ...data });
 
-    if (searches && searches.length > 0) {
+    if (searches && searches.length >= 0) {
       await quest.searches().attach(searches);
       quest.searches = await quest.searches().fetch();
     }
@@ -42,7 +42,7 @@ class QuestController {
     quest.merge(data);
     await quest.save();
 
-    if (searches && searches.length > 0) {
+    if (searches && searches.length >= 0) {
       await quest.searches().sync(searches);
       quest.searches = await quest.searches().fetch();
     }
