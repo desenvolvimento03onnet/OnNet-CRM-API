@@ -18,7 +18,7 @@ class QuestController {
   }
 
   async store({ request, auth }) {
-    const { searches, ...data } = request.only(['question', 'searches']);
+    const { searches, ...data } = request.only(['question', 'searches', 'active']);
     const quest = await Quest.create({ 'user_id': auth.user.id, ...data });
 
     if (searches && searches.length >= 0) {

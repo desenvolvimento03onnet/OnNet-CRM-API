@@ -18,7 +18,7 @@ class SearchController {
   }
 
   async store({ request, auth }) {
-    const { quests, ...data } = request.only(['type', 'quests']);
+    const { quests, ...data } = request.only(['type', 'quests', 'active']);
     const search = await Search.create({ 'user_id': auth.user.id, ...data });
 
     if (quests && quests.length >= 0) {
