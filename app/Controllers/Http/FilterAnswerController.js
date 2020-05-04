@@ -21,7 +21,7 @@ class FilterAnswerController {
                 .where('quests.id', quest.rows[i].quest_id)
                 .where('interviews.finished', true)
                 .where('interviews.search_id', params.id)
-                .count('answers.id')
+                .count('answers.id AS count')
                 .groupBy('quests.id', 'answers.rate')
                 .orderBy('answers.rate', 'desc')
 
