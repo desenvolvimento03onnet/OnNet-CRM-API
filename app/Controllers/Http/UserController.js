@@ -5,11 +5,14 @@ const User = use('App/Models/User');
 class UserController {
 
     async index({ request }) {
-        const { active } = request.get()
+        const { active, username } = request.get()
         const users = User.query();
 
         if (active)
             users.where('active', active);
+
+        if (username)
+            users.where('username', username)
 
         return await users.fetch();
     }
