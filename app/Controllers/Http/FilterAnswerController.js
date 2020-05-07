@@ -12,13 +12,13 @@ class FilterAnswerController {
             .innerJoin('search_quests', 'quests.id', 'search_quests.quest_id')
             .where('search_quests.search_id', params.id).orderBy('quests.id').fetch();
 
-        const query = Answer.query()
-            .select('answers.rate')
-            .innerJoin('interviews', 'answers.interview_id', 'interviews.id')
-            .innerJoin('quests', 'answers.quest_id', 'quests.id')
-
         for (var i = 0; i < quest.rows.length; i++) {
-            const answer = await query.where('quests.id', quest.rows[i].quest_id)
+
+            const answer = await Answer.query()
+                .select('answers.rate')
+                .innerJoin('interviews', 'answers.interview_id', 'interviews.id')
+                .innerJoin('quests', 'answers.quest_id', 'quests.id')
+                .where('quests.id', quest.rows[i].quest_id)
                 .where('interviews.finished', true)
                 .where('interviews.search_id', params.id)
                 .count('answers.id AS count')
