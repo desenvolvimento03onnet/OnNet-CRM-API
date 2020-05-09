@@ -32,7 +32,7 @@ class SearchController {
   async show({ params }) {
     const search = await Search.query().where('id', params.id).with('quests').with('user').fetch();
 
-    return search;
+    return search.rows[0];
   }
 
   async update({ params, request }) {

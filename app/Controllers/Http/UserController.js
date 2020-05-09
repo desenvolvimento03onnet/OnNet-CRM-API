@@ -6,7 +6,7 @@ class UserController {
 
     async index({ request }) {
         const { active, username } = request.get()
-        const users = User.query();
+        const users = User.query().with('permission');
 
         if (active)
             users.where('active', active);
@@ -25,9 +25,9 @@ class UserController {
     }
 
     async show({ params }) {
-        const users = await User.findOrFail(params.id);
+        const users = await User.query().with('permission').where('id', params.id).fetch();
 
-        return users;
+        return users.rows[0];
     }
 
     async update({ params, request }) {

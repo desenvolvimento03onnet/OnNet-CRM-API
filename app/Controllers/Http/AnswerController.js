@@ -25,7 +25,7 @@ class AnswerController {
     const answer = await Answer.query()
       .where('id', params.id).with('interview.search').with('quest').fetch();
 
-    return answer;
+    return answer.rows[0];
   }
 
   async update({ params, request }) {

@@ -13,7 +13,7 @@ class SearchQuestController {
   async show({ params }) {
     const searchQuest = await SearchQuest.query().where('id', params.id).with('search').with('quest').fetch();
 
-    return searchQuest;
+    return searchQuest.rows[0];
   }
 
   async destroy({ params }) {
