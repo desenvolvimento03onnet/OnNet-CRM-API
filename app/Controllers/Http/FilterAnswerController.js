@@ -10,7 +10,9 @@ class FilterAnswerController {
 
         const quest = await Quest.query()
             .innerJoin('search_quests', 'quests.id', 'search_quests.quest_id')
-            .where('search_quests.search_id', params.id).orderBy('quests.id').fetch();
+            .where('search_quests.search_id', params.id)
+            .where('quests.active', true)
+            .orderBy('quests.id').fetch();
 
         for (var i = 0; i < quest.rows.length; i++) {
 
