@@ -25,7 +25,7 @@ class FilterAnswerController {
                 .where('interviews.search_id', params.id)
                 .count('answers.id AS count')
                 .groupBy('quests.id', 'answers.rate')
-                .orderBy('answers.rate', 'desc')
+                .orderBy('answers.rate')
 
             answerByQuest.push({
                 quest_id: quest.rows[i].quest_id,
