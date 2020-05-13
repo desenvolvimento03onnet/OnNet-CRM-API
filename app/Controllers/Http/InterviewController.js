@@ -6,7 +6,7 @@ const SearchQuest = use('App/Models/SearchQuest');
 class InterviewController {
 
   async index({ request }) {
-    const { beginDate, city, endDate, finished, search, user } = request.get();
+    const { beginDate, city, endDate, search, user } = request.get();
     const interviews = Interview.query();
 
     if (beginDate)
@@ -17,9 +17,6 @@ class InterviewController {
 
     if (endDate)
       interviews.where('interview_date', '<=', endDate);
-
-    if (finished)
-      interviews.where('finished', finished);
 
     if (search)
       interviews.where('search_id', search).with('search');

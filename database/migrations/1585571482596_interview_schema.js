@@ -7,7 +7,6 @@ class InterviewSchema extends Schema {
     this.create('interviews', (table) => {
       table.increments()
       table.string('client_name').notNullable()
-      table.boolean('finished').notNullable().defaultTo(false)
       table.integer('search_id')
         .unsigned()
         .notNullable()

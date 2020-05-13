@@ -21,7 +21,6 @@ class FilterAnswerController {
                 .innerJoin('interviews', 'answers.interview_id', 'interviews.id')
                 .innerJoin('quests', 'answers.quest_id', 'quests.id')
                 .where('quests.id', quest.rows[i].quest_id)
-                .where('interviews.finished', true)
                 .where('interviews.search_id', params.id)
                 .count('answers.id AS count')
                 .groupBy('quests.id', 'answers.rate')
