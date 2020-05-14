@@ -59,13 +59,13 @@ class FilterInterviewController {
 
         const interview = await Interview.query()
             .select(
-                'searches.type',
+                'searches.type AS search',
                 'interviews.client_name',
-                'cities.name',
+                'cities.name AS city',
                 'quests.question',
                 'answers.rate',
                 'answers.note',
-                'users.name',
+                'users.name AS user',
                 'interviews.updated_at'
             ).innerJoin('searches', 'interviews.search_id', 'searches.id')
             .innerJoin('cities', 'interviews.city_id', 'cities.id')
