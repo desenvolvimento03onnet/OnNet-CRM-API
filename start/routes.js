@@ -22,7 +22,7 @@ Route.group(() => {
   Route.resource('userPermission', 'UserPermissionController').apiOnly().except(['store', 'update']);
 
   //answer filter routes
-  Route.get('answer/groupBy/answersByQuest/:id', 'FilterAnswerController.countAnswersByQuest');
+  Route.get('answer/countRates/:id', 'FilterAnswerController.countRates');
 
   //interview filter routes
   Route.get('interview/groupBy/user', 'FilterInterviewController.interviewsByUser');

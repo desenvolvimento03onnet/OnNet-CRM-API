@@ -1,39 +1,71 @@
 'use strict'
 
 const Answer = use('App/Models/Answer');
+const Interview = use('App/Models/Interview');
 const Quest = use('App/Models/Quest');
 
 class FilterAnswerController {
 
-    async countAnswersByQuest({ params }) {
-        let answerByQuest = [];
-
-        const quest = await Quest.query()
+    async getQuests(search_id) {
+        var quest = await Quest.query()
+            .select('quests.id AS id', 'quests.question')
             .innerJoin('search_quests', 'quests.id', 'search_quests.quest_id')
-            .where('search_quests.search_id', params.id)
-            .where('quests.active', true)
-            .orderBy('quests.id').fetch();
+            .where('search_quests.search_id', search_id)
+            .orderBy('search_quests.id').fetch();
 
-        for (var i = 0; i < quest.rows.length; i++) {
+        return quest.rows;
+    }
 
+    async getInterviews(search_id, city, begin, end) {
+        const interview = Interview.ids()
+            .where('search_id', search_id)
+
+        if (city)
+            interview.where('city_id', city);
+
+        if (begin)
+            interview.where('created_at', '>=', begin + ' 00:00:00');
+
+        if (end)
+            interview.where('created_at', '<=', end + ' 23:59:59');
+
+        return await interview;
+    }
+
+    async getAnswers(quests, interviews) {
+        var query = [];
+
+        for (var i = 0; i < quests.length; i++) {
             const answer = await Answer.query()
                 .select('answers.rate')
-                .innerJoin('interviews', 'answers.interview_id', 'interviews.id')
-                .innerJoin('quests', 'answers.quest_id', 'quests.id')
-                .where('quests.id', quest.rows[i].quest_id)
-                .where('interviews.search_id', params.id)
+                .whereIn('answers.interview_id', interviews)
+                .where('answers.quest_id', quests[i].id)
                 .count('answers.id AS count')
-                .groupBy('quests.id', 'answers.rate')
+                .groupBy('answers.rate')
                 .orderBy('answers.rate')
 
-            answerByQuest.push({
-                quest_id: quest.rows[i].quest_id,
-                question: quest.rows[i].question,
+            query.push({
+                quest_id: quests[i].id,
+                question: quests[i].question,
                 rates: answer
             })
         }
 
-        return answerByQuest;
+        return query;
+    }
+
+    async countRates({ params, request }) {
+        const { city, begin, end } = request.get();
+
+        const interview = await this.getInterviews(params.id, city, begin, end);
+
+        if (interview.length > 0) {
+            const quest = await this.getQuests(params.id);
+
+            return await this.getAnswers(quest, interview);
+        }
+
+        return [];
     }
 
 }
