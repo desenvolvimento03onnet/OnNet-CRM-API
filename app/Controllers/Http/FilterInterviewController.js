@@ -19,7 +19,9 @@ class FilterInterviewController {
         if (user)
             interview.where('interviews.user_id', user);
 
-        return await interview.count('interviews.id AS count').groupBy('cities.id');
+        return await interview.count('interviews.id AS count')
+            .groupBy('cities.id')
+            .orderBy('cities.created_at', 'DESC');
     }
 
     async interviewsByUser({ request }) {
@@ -34,7 +36,9 @@ class FilterInterviewController {
         if (user)
             interview.where('interviews.user_id', user);
 
-        return await interview.count('interviews.id AS count').groupBy('users.id');
+        return await interview.count('interviews.id AS count')
+            .groupBy('users.id')
+            .orderBy('users.created_at', 'DESC');
     }
 
     async avarageByCity() {
@@ -49,7 +53,7 @@ class FilterInterviewController {
             .where('cities.active', true)
             .avg('answers.rate AS avarage')
             .groupBy('interviews.city_id', 'searches.id')
-            .orderBy('cities.name', 'searches.type')
+            .orderBy('cities.created_at', 'DESC')
 
         return interview;
     }
@@ -74,7 +78,7 @@ class FilterInterviewController {
             .innerJoin('quests', 'answers.quest_id', 'quests.id')
             .where('cities.active', true)
             .groupBy('answers.id')
-            .orderBy('interviews.id', 'searches.type', 'cities.name')
+            .orderBy('interviews.updated_at', 'DESC')
             .paginate(page, '200')
 
         return interview;

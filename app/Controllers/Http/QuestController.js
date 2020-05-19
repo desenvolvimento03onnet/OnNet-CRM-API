@@ -14,7 +14,7 @@ class QuestController {
     if (user)
       quests.where('user_id', user);
 
-    return await quests.fetch();
+    return await quests.orderBy('created_at', 'DESC').fetch();
   }
 
   async store({ request, auth }) {

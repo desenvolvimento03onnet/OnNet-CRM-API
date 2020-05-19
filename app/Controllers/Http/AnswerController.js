@@ -18,7 +18,7 @@ class AnswerController {
       answer.innerJoin('interviews', 'answers.interview_id', 'interviews.id')
         .where('interviews.search_id', search);
 
-    return await answer.fetch();
+    return await answer.orderBy('created_at', 'DESC').fetch();
   }
 
   async show({ params }) {

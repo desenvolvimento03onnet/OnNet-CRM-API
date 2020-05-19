@@ -27,7 +27,6 @@ Route.group(() => {
   //interview filter routes
   Route.get('interview/groupBy/user', 'FilterInterviewController.interviewsByUser');
   Route.get('interview/groupBy/city', 'FilterInterviewController.interviewsByCity');
-  // Route.get('interview/historic/avarage/client', 'FilterInterviewController.avarageByClient');
   Route.get('interview/historic/avarage/city', 'FilterInterviewController.avarageByCity');
   Route.get('interview/historic/all', 'FilterInterviewController.interviewsHistoric');
 

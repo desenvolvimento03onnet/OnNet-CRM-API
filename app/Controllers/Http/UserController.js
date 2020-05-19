@@ -14,7 +14,7 @@ class UserController {
         if (username)
             users.where('username', username)
 
-        return await users.fetch();
+        return await users.orderBy('created_at', 'DESC').fetch();
     }
 
     async store({ request }) {

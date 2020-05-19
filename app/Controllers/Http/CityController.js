@@ -14,7 +14,7 @@ class CityController {
     if (user)
       cities.where('user_id', user);
 
-    return await cities.fetch();
+    return await cities.orderBy('created_at', 'DESC').fetch();
   }
 
   async store({ request, auth }) {

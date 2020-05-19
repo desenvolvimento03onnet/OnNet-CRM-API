@@ -14,7 +14,7 @@ class SearchController {
     if (user)
       searches.where('user_id', user);
 
-    return await searches.fetch();
+    return await searches.orderBy('created_at', 'DESC').fetch();
   }
 
   async store({ request, auth }) {
