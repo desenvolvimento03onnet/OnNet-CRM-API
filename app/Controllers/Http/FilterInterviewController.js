@@ -77,9 +77,8 @@ class FilterInterviewController {
             .innerJoin('answers', 'interviews.id', 'answers.interview_id')
             .innerJoin('quests', 'answers.quest_id', 'quests.id')
             .where('cities.active', true)
-            .groupBy('answers.id')
             .orderBy('interviews.updated_at', 'DESC')
-            .paginate(page, '200')
+            .paginate(page, 200)
 
         return interview;
     }
