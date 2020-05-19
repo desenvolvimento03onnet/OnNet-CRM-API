@@ -60,7 +60,7 @@ class FilterInterviewController {
 
     async interviewsHistoric({ request }) {
         const page = request.get().page || 1;
-
+        const perPage = request.get().perPage || 120;
         const interview = await Interview.query()
             .select(
                 'searches.type AS search',
@@ -78,7 +78,7 @@ class FilterInterviewController {
             .innerJoin('quests', 'answers.quest_id', 'quests.id')
             .where('cities.active', true)
             .orderBy('interviews.updated_at', 'DESC')
-            .paginate(page, 200)
+            .paginate(page, perPage)
 
         return interview;
     }
