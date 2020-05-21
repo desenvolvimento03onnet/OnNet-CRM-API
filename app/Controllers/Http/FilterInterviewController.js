@@ -46,7 +46,7 @@ class FilterInterviewController {
             .select(
                 'searches.type AS search',
                 'cities.name AS city',
-                'interviews.updated_at'
+                'interviews.interview_date'
             ).innerJoin('searches', 'interviews.search_id', 'searches.id')
             .innerJoin('cities', 'interviews.city_id', 'cities.id')
             .innerJoin('answers', 'interviews.id', 'answers.interview_id')
@@ -70,14 +70,14 @@ class FilterInterviewController {
                 'answers.rate',
                 'answers.note',
                 'users.name AS user',
-                'interviews.updated_at'
+                'interviews.interview_date'
             ).innerJoin('searches', 'interviews.search_id', 'searches.id')
             .innerJoin('cities', 'interviews.city_id', 'cities.id')
             .innerJoin('users', 'interviews.user_id', 'users.id')
             .innerJoin('answers', 'interviews.id', 'answers.interview_id')
             .innerJoin('quests', 'answers.quest_id', 'quests.id')
             .where('cities.active', true)
-            .orderBy('interviews.updated_at', 'DESC')
+            .orderBy('interviews.interview_date', 'DESC')
             .paginate(page, perPage)
 
         return interview;

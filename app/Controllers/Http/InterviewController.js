@@ -24,7 +24,7 @@ class InterviewController {
     if (user)
       interviews.where('user_id', user).with('user');
 
-    return await interviews.orderBy('created_at', 'DESC').fetch();
+    return await interviews.orderBy('interview_date', 'DESC').fetch();
   }
 
   async store({ request, response, auth }) {

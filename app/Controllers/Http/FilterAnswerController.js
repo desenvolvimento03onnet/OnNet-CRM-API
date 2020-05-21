@@ -14,10 +14,10 @@ class FilterAnswerController {
             interview.where('city_id', city);
 
         if (begin)
-            interview.where('created_at', '>=', begin + ' 00:00:00');
+            interview.where('interview_date', '>=', begin + ' 00:00:00');
 
         if (end)
-            interview.where('created_at', '<=', end + ' 23:59:59');
+            interview.where('interview_date', '<=', end + ' 23:59:59');
 
         return await interview;
     }
