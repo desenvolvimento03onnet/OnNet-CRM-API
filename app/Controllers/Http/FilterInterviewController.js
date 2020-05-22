@@ -41,47 +41,39 @@ class FilterInterviewController {
             .orderBy('users.created_at', 'DESC');
     }
 
-    async avarageByCity() {
-        const interview = await Interview.query()
-            .select(
-                'searches.type AS search',
-                'cities.name AS city',
-                'interviews.interview_date'
-            ).innerJoin('searches', 'interviews.search_id', 'searches.id')
-            .innerJoin('cities', 'interviews.city_id', 'cities.id')
-            .innerJoin('answers', 'interviews.id', 'answers.interview_id')
-            .where('cities.active', true)
-            .avg('answers.rate AS avarage')
-            .groupBy('interviews.city_id', 'searches.id')
-            .orderBy('cities.created_at', 'DESC')
+    async getFilteredInterview({ request }) {
+        const {
+            begin,
+            end,
+            city,
+            search,
+            user
+        } = request.body;
 
-        return interview;
+        var { page, perPage } = request.get();
+        const interviews = Interview.query().with('city').with('search').with('user');
+
+        page = page ? page : 1;
+        perPage = perPage ? perPage : 120;
+
+        if (begin)
+            interviews.where('interview_date', '>=', begin);
+
+        if (city)
+            interviews.where('city_id', city);
+
+        if (end)
+            interviews.where('interview_date', '<=', end);
+
+        if (search)
+            interviews.where('search_id', search);
+
+        if (user)
+            interviews.where('user_id', user);
+
+        return await interviews.orderBy('interview_date', 'DESC').paginate(page, perPage);
     }
 
-    async interviewsHistoric({ request }) {
-        const page = request.get().page || 1;
-        const perPage = request.get().perPage || 120;
-        const interview = await Interview.query()
-            .select(
-                'searches.type AS search',
-                'interviews.client_name',
-                'cities.name AS city',
-                'quests.question',
-                'answers.rate',
-                'answers.note',
-                'users.name AS user',
-                'interviews.interview_date'
-            ).innerJoin('searches', 'interviews.search_id', 'searches.id')
-            .innerJoin('cities', 'interviews.city_id', 'cities.id')
-            .innerJoin('users', 'interviews.user_id', 'users.id')
-            .innerJoin('answers', 'interviews.id', 'answers.interview_id')
-            .innerJoin('quests', 'answers.quest_id', 'quests.id')
-            .where('cities.active', true)
-            .orderBy('interviews.interview_date', 'DESC')
-            .paginate(page, perPage)
-
-        return interview;
-    }
 }
 
 module.exports = FilterInterviewController
