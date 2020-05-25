@@ -51,11 +51,11 @@ class FilterInterviewController {
             client_name
         } = request.body;
 
-        var { page, perPage } = request.get();
+        var { paginate, page, perPage } = request.get();
         const interviews = Interview.query().with('city').with('search').with('user');
 
         page = page ? page : 1;
-        perPage = perPage ? perPage : 120;
+        perPage = perPage ? perPage : 200;
 
         if (begin)
             interviews.where('interview_date', '>=', begin);
@@ -75,7 +75,11 @@ class FilterInterviewController {
         if (client_name)
             interviews.where('client_name', 'LIKE', '%' + client_name + '%');
 
-        return await interviews.orderBy('interview_date', 'DESC').paginate(page, perPage);
+        if (paginate === '0')
+            return await interviews.orderBy('interview_date', 'DESC').paginate(1, Infinity);
+
+        else
+            return await interviews.orderBy('interview_date', 'DESC').paginate(page, perPage);
     }
 
 }
