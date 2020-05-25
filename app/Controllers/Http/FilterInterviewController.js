@@ -47,7 +47,8 @@ class FilterInterviewController {
             end,
             city,
             search,
-            user
+            user,
+            client_name
         } = request.body;
 
         var { page, perPage } = request.get();
@@ -70,6 +71,9 @@ class FilterInterviewController {
 
         if (user)
             interviews.where('user_id', user);
+
+        if (client_name)
+            interviews.where('client_name', 'LIKE', '%' + client_name + '%');
 
         return await interviews.orderBy('interview_date', 'DESC').paginate(page, perPage);
     }

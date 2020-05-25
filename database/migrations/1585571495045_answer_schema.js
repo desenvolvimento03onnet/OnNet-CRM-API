@@ -7,7 +7,7 @@ class AnswerSchema extends Schema {
     this.create('answers', (table) => {
       table.increments()
       table.integer('rate').unsigned()
-      table.string('note')
+      table.string('note', 512)
       table.integer('interview_id')
         .unsigned()
         .notNullable()
