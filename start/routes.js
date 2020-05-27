@@ -23,6 +23,7 @@ Route.group(() => {
 
   //answer filter routes
   Route.get('answer/countRates/:id', 'FilterAnswerController.countRates');
+  Route.get('answer/noteByQuest/:id', 'FilterAnswerController.getNotesByQuest');
 
   //interview filter routes
   Route.get('interview/groupBy/user', 'FilterInterviewController.interviewsByUser');

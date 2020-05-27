@@ -2,7 +2,6 @@
 
 const Answer = use('App/Models/Answer');
 const Interview = use('App/Models/Interview');
-const Quest = use('App/Models/Quest');
 
 class FilterAnswerController {
 
@@ -28,7 +27,7 @@ class FilterAnswerController {
         const interview = await this.getInterviews(params.id, city, begin, end);
 
         if (!quest)
-            return response.status(500).json({error: "Não foi possível encontrar o parâmetro 'quest'"});
+            return response.status(500).json({ error: "Não foi possível encontrar o parâmetro 'quest'" });
 
         const answer = await Answer.query()
             .select('answers.rate')
@@ -39,6 +38,20 @@ class FilterAnswerController {
             .orderBy('answers.rate')
 
         return answer;
+    }
+
+    async getNotesByQuest({ params, request }) {
+        const page = request.get().page || 1;
+
+        const answer = Answer.query()
+            .innerJoin('interviews', 'answers.interview_id', 'interviews.id')
+            .where('answers.quest_id', params.id)
+            .where('answers.note', 'IS NOT', null)
+            .with('interview')
+            .orderBy('interviews.interview_date', 'DESC')
+            .paginate(page, 50);
+
+        return await answer;
     }
 
 }
