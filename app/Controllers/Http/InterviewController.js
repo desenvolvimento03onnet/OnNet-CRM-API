@@ -42,10 +42,12 @@ class InterviewController {
       await interview.quests().attach(quests);
       interview.quests = await interview.quests().fetch();
 
+      console.log(interview);
+      
       return interview;
     }
     else
-      response.status(400).json({ message: 'No quests related to this search' })
+      return response.status(400).json({ message: 'No quests related to this search' })
 
   }
 
