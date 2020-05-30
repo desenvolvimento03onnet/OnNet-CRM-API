@@ -5,7 +5,7 @@ const Interview = use('App/Models/Interview');
 class FilterInterviewController {
 
     async interviewsByCity({ request }) {
-        const { active, city, user } = request.get();
+        const { active, city, user, begin, end } = request.get();
         const interview = Interview.query()
             .select('cities.id', 'cities.name')
             .rightJoin('cities', 'interviews.city_id', 'cities.id')
@@ -19,13 +19,19 @@ class FilterInterviewController {
         if (user)
             interview.where('interviews.user_id', user);
 
+        if (begin)
+            interview.where('interview_date', '>=', begin + ' 00:00:00');
+
+        if (end)
+            interview.where('interview_date', '<=', end + ' 23:59:59');
+
         return await interview.count('interviews.id AS count')
             .groupBy('cities.id')
             .orderBy('cities.created_at', 'DESC');
     }
 
     async interviewsByUser({ request }) {
-        const { active, user } = request.get();
+        const { active, user, begin, end } = request.get();
         const interview = Interview.query()
             .select('users.id', 'users.name')
             .innerJoin('users', 'interviews.user_id', 'users.id')
@@ -35,6 +41,12 @@ class FilterInterviewController {
 
         if (user)
             interview.where('interviews.user_id', user);
+
+        if (begin)
+            interview.where('interview_date', '>=', begin + ' 00:00:00');
+
+        if (end)
+            interview.where('interview_date', '<=', end + ' 23:59:59');
 
         return await interview.count('interviews.id AS count')
             .groupBy('users.id')
