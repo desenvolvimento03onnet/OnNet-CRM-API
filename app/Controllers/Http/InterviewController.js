@@ -42,8 +42,8 @@ class InterviewController {
       await interview.quests().attach(quests);
       interview.quests = await interview.quests().fetch();
 
-      console.log(interview);
-      
+      console.log({ ...data, search_id });
+
       return interview;
     }
     else
@@ -53,7 +53,7 @@ class InterviewController {
 
   async show({ params }) {
     const interview = await Interview.query().where('id', params.id)
-    .with('search').with('city').with('user').fetch();
+      .with('search').with('city').with('user').fetch();
 
     return interview.rows[0];
   }
