@@ -38,7 +38,6 @@ class FilterInterviewController {
         const interview = Interview.query()
             .select('users.id', 'users.name')
             .innerJoin('users', 'interviews.user_id', 'users.id')
-            .where('search_id', params.id)
 
         if (search)
             interview.where('search_id', search)
