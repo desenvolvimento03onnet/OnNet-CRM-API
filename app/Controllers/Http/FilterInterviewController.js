@@ -5,13 +5,16 @@ const Interview = use('App/Models/Interview');
 class FilterInterviewController {
 
     async interviewsByCity({ request }) {
-        const { active, city, user, begin, end } = request.get();
+        const { search, active, city, user, begin, end } = request.get();
         const interview = Interview.query()
             .select('cities.id', 'cities.name')
             .rightJoin('cities', 'interviews.city_id', 'cities.id')
 
+        if (search)
+            interview.where('search_id', search);
+
         if (active)
-            interview.where('cities.active', active)
+            interview.where('cities.active', active);
 
         if (city)
             interview.where('interviews.city_id', city);
@@ -31,13 +34,17 @@ class FilterInterviewController {
     }
 
     async interviewsByUser({ request }) {
-        const { active, user, begin, end } = request.get();
+        const { search, active, user, begin, end } = request.get();
         const interview = Interview.query()
             .select('users.id', 'users.name')
             .innerJoin('users', 'interviews.user_id', 'users.id')
+            .where('search_id', params.id)
+
+        if (search)
+            interview.where('search_id', search)
 
         if (active)
-            interview.where('users.active', active)
+            interview.where('users.active', active);
 
         if (user)
             interview.where('interviews.user_id', user);
