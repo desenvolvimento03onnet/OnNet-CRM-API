@@ -5,16 +5,20 @@ const User = use('App/Models/User');
 class UserController {
 
     async index({ request }) {
-        const { active, username } = request.get()
+        const { active, username, searcher } = request.get()
         const users = User.query().with('permission');
 
         if (active)
-            users.where('active', active);
+            users.where('users.active', active);
 
         if (username)
-            users.where('username', username)
+            users.where('users.username', username)
 
-        return await users.orderBy('created_at', 'DESC').fetch();
+        if(searcher)
+            users.innerJoin('interviews', 'users.id', 'interviews.user_id')
+
+        // return await users.orderBy('users.created_at', 'DESC').fetch();
+        return await users.groupBy('users.id').fetch();
     }
 
     async store({ request }) {
