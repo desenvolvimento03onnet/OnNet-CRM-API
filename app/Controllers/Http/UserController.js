@@ -6,7 +6,15 @@ class UserController {
 
     async index({ request }) {
         const { active, username, searcher } = request.get()
-        const users = User.query().with('permission');
+        const users = User.query().select(
+            'users.id',
+            'users.name',
+            'users.username',
+            'users.active',
+            'users.permission_id',
+            'users.created_at',
+            'users.updated_at',
+        ).with('permission');
 
         if (active)
             users.where('users.active', active);
@@ -14,11 +22,10 @@ class UserController {
         if (username)
             users.where('users.username', username)
 
-        if(searcher)
+        if (searcher)
             users.innerJoin('interviews', 'users.id', 'interviews.user_id')
 
-        // return await users.orderBy('users.created_at', 'DESC').fetch();
-        return await users.groupBy('users.id').fetch();
+        return await users.orderBy('users.name').groupBy('users.id').fetch();
     }
 
     async store({ request }) {
