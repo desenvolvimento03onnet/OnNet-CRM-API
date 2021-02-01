@@ -14,6 +14,7 @@ Route.resource('/permission', 'PermissionController').apiOnly();
 Route.group(() => {
   Route.resource('answer', 'AnswerController').apiOnly().except(['store']);
   Route.resource('city', 'CityController').apiOnly();
+  Route.resource('department', 'DepartmentController').apiOnly();
   Route.resource('interview', 'InterviewController').apiOnly();
   Route.resource('quest', 'QuestController').apiOnly();
   Route.resource('search', 'SearchController').apiOnly();

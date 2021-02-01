@@ -1,43 +1,48 @@
-'use strict'
+"use strict";
 
-const Interview = use('App/Models/Interview');
-const SearchQuest = use('App/Models/SearchQuest');
+const Interview = use("App/Models/Interview");
+const SearchQuest = use("App/Models/SearchQuest");
 
 class InterviewController {
-
   async index({ request }) {
     const { beginDate, city, endDate, search, user } = request.get();
     const interviews = Interview.query();
 
-    if (beginDate)
-      interviews.where('interview_date', '>=', beginDate);
+    if (beginDate) interviews.where("interview_date", ">=", beginDate);
 
-    if (city)
-      interviews.where('city_id', city).with('city');
+    if (city) interviews.where("city_id", city).with("city");
 
-    if (endDate)
-      interviews.where('interview_date', '<=', endDate);
+    if (endDate) interviews.where("interview_date", "<=", endDate);
 
-    if (search)
-      interviews.where('search_id', search).with('search');
+    if (search) interviews.where("search_id", search).with("search");
 
-    if (user)
-      interviews.where('user_id', user).with('user');
+    if (user) interviews.where("user_id", user).with("user");
 
-    return await interviews.orderBy('interview_date', 'DESC').fetch();
+    return await interviews.orderBy("interview_date", "DESC").fetch();
   }
 
   async store({ request, response, auth }) {
-    const { search_id, ...data } = request.only(['client_name', 'interview_date', 'city_id', 'search_id']);
-    const searchQuest = await SearchQuest.query().where('search_id', search_id).fetch();
+    const { search_id, ...data } = request.only([
+      "client_name",
+      "interview_date",
+      "city_id",
+      "search_id",
+    ]);
+    const searchQuest = await SearchQuest.query()
+      .where("search_id", search_id)
+      .fetch();
     let quests = [];
 
-    searchQuest.rows.forEach(element => {
+    searchQuest.rows.forEach((element) => {
       quests.push(element.quest_id);
     });
 
     if (quests && quests.length) {
-      const interview = await Interview.create({ 'user_id': auth.user.id, 'search_id': search_id, ...data });
+      const interview = await Interview.create({
+        user_id: auth.user.id,
+        search_id: search_id,
+        ...data,
+      });
 
       await interview.quests().attach(quests);
       interview.quests = await interview.quests().fetch();
@@ -45,15 +50,19 @@ class InterviewController {
       console.log({ ...data, search_id });
 
       return interview;
-    }
-    else
-      return response.status(400).json({ message: 'No quests related to this search' })
-
+    } else
+      return response
+        .status(400)
+        .json({ message: "No quests related to this search" });
   }
 
   async show({ params }) {
-    const interview = await Interview.query().where('id', params.id)
-      .with('search').with('city').with('user').fetch();
+    const interview = await Interview.query()
+      .where("id", params.id)
+      .with("search")
+      .with("city")
+      .with("user")
+      .fetch();
 
     return interview.rows[0];
   }
@@ -70,7 +79,7 @@ class InterviewController {
       interview.quests = await interview.quests().fetch();
     }
 
-    return interview
+    return interview;
   }
 
   async destroy({ params }) {
@@ -78,7 +87,6 @@ class InterviewController {
 
     interview.delete();
   }
-
 }
 
-module.exports = InterviewController
+module.exports = InterviewController;

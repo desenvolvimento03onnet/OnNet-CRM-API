@@ -1,25 +1,26 @@
-'use strict'
+"use strict";
 
-const Quest = use('App/Models/Quest');
+const Quest = use("App/Models/Quest");
 
 class QuestController {
-
   async index({ request }) {
-    const { active, user } = request.get();
-    const quests = Quest.query().with('searches').with('user');
+    const { user, ...params } = request.get();
+    const quests = Quest.query().with("searches").with("user").where(params);
 
-    if (active)
-      quests.where('active', active);
+    if (user) quests.where("user_id", user);
 
-    if (user)
-      quests.where('user_id', user);
-
-    return await quests.orderBy('created_at', 'DESC').fetch();
+    return await quests.orderBy("created_at", "DESC").fetch();
   }
 
   async store({ request, auth }) {
-    const { searches, ...data } = request.only(['question', 'searches', 'active']);
-    const quest = await Quest.create({ 'user_id': auth.user.id, ...data });
+    const { searches, ...data } = request.only([
+      "question",
+      "searches",
+      "active",
+      "need_department",
+      "need_os",
+    ]);
+    const quest = await Quest.create({ user_id: auth.user.id, ...data });
 
     if (searches && searches.length >= 0) {
       await quest.searches().attach(searches);
@@ -55,7 +56,6 @@ class QuestController {
 
     quest.delete();
   }
-
 }
 
-module.exports = QuestController
+module.exports = QuestController;
